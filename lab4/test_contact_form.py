@@ -25,7 +25,9 @@ VALID_DATA = {
 def driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--window-size=1280,900")
-    # options.add_argument("--headless=new")
+    options.add_argument("--headless=new")          # Невидимый режим для GitHub Actions
+    options.add_argument("--no-sandbox")            # Защита от падения на сервере
+    options.add_argument("--disable-dev-shm-usage") # Защита от нехватки памяти
     service = Service(ChromeDriverManager().install())
     drv = webdriver.Chrome(service=service, options=options)
     yield drv
