@@ -24,8 +24,8 @@ jobs:
         python -m pip install --upgrade pip
         pip install pytest requests selenium webdriver-manager
 
-    - name: Run Unit Tests (Lab 6)
-      run: python -m pytest lab6/test_calculator.py -v
+    - name: Run Unit Tests (Calculator)
+      run: python -m pytest calculator/test_calculator.py -v
 
     - name: Run API Tests (Lab 5)
       run: python -m pytest lab5/test_reqres_api.py -v
