@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page — Test Stand</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .card {
+            background: #fff;
+            padding: 32px;
+            border-radius: 10px;
+            width: 360px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 20px;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin: 12px 0 4px;
+            font-size: 14px;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 11px;
+            border: none;
+            border-radius: 6px;
+            background: #4a90e2;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #357ab8;
+            }
+
+        .error {
+            color: #d93025;
+            font-size: 13px;
+            margin-top: 10px;
+            min-height: 18px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #welcome {
+            text-align: center;
+        }
+
+        #logout-btn {
+            background: #d93025;
+        }
+
+            #logout-btn:hover {
+                background: #b3261e;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Форма логина -->
+    <div class="card" id="login-container">
+        <h1>Вход в систему</h1>
+        <form id="login-form" novalidate>
+            <label for="username">Логин</label>
+            <input type="text" id="username" name="username" placeholder="Введите логин" autocomplete="username">
+
+            <label for="password">Пароль</label>
+            <input type="password" id="password" name="password" placeholder="Введите пароль" autocomplete="current-password">
+
+            <button type="submit" id="login-btn" name="login">Войти</button>
+            <div class="error" id="error-message"></div>
+        </form>
+    </div>
+
+    <!-- Экран после успешного входа -->
+    <div class="card hidden" id="welcome-container">
+        <h1 id="welcome">Добро пожаловать!</h1>
+        <p id="welcome-user" style="text-align:center;"></p>
+        <button id="logout-btn" name="logout">Logout</button>
+    </div>
+
+    <script>
+    // Тестовые валидные credentials
+    const VALID_USER = "testuser";
+    const VALID_PASS = "testpass123";
+
+    const loginContainer = document.getElementById("login-container");
+    const welcomeContainer = document.getElementById("welcome-container");
+    const loginForm = document.getElementById("login-form");
+    const errorMessage = document.getElementById("error-message");
+    const welcomeUser = document.getElementById("welcome-user");
+
+    loginForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      // Валидация пустых полей
+      if (!username || !password) {
+        errorMessage.textContent = "Заполните все поля";
+        return;
+      }
+
+      // Проверка credentials
+      if (username === VALID_USER && password === VALID_PASS) {
+        errorMessage.textContent = "";
+        loginContainer.classList.add("hidden");
+        welcomeContainer.classList.remove("hidden");
+        welcomeUser.textContent = "Вы вошли как: " + username;
+      } else {
+        errorMessage.textContent = "Неверный логин или пароль";
+      }
+    });
+
+    // Logout возвращает форму логина
+    document.getElementById("logout-btn").addEventListener("click", function () {
+      welcomeContainer.classList.add("hidden");
+      loginContainer.classList.remove("hidden");
+      loginForm.reset();
+      errorMessage.textContent = "";
+    });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+﻿name: Run Automated Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest requests selenium webdriver-manager
+
+    - name: Run Unit Tests (Lab 6)
+      run: python -m pytest lab6/test_calculator.py -v
+
+    - name: Run API Tests (Lab 5)
+      run: python -m pytest lab5/test_reqres_api.py -v
+
+    - name: Run UI Tests (Lab 3 & 4) in Headless Mode
+      run: |
+        python -m pytest lab3/test_login.py lab4/test_contact_form.py -v

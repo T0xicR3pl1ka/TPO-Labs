@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form — Test Stand</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #eef1f5;
+            display: flex;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 28px 32px;
+            border-radius: 10px;
+            width: 480px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 22px;
+            margin: 0 0 18px;
+            text-align: center;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .req {
+            color: #d93025;
+        }
+
+        input[type="text"], input[type="email"], textarea, select {
+            width: 100%;
+            padding: 9px 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+            input:focus, textarea:focus, select:focus {
+                outline: none;
+                border-color: #4a90e2;
+            }
+
+        .error {
+            color: #d93025;
+            font-size: 12px;
+            min-height: 16px;
+            margin-top: 3px;
+        }
+
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+        }
+
+            .checkbox-row input {
+                width: auto;
+            }
+
+        button {
+            width: 100%;
+            margin-top: 16px;
+            padding: 11px;
+            border: none;
+            border-radius: 6px;
+            background: #4a90e2;
+            color: #fff;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #357ab8;
+            }
+
+        .success {
+            color: #1e7e34;
+            background: #e6f4ea;
+            border: 1px solid #b7dfc2;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h1>Свяжитесь с нами</h1>
+
+        <form id="contact-form" novalidate>
+            <div class="field">
+                <label for="name">Имя <span class="req">*</span></label>
+                <input type="text" id="name" name="name" placeholder="Иван">
+                <div class="error" id="name-error"></div>
+            </div>
+
+            <div class="field">
+                <label for="email">Email <span class="req">*</span></label>
+                <input type="email" id="email" name="email" placeholder="ivan@example.com">
+                <div class="error" id="email-error"></div>
+            </div>
+
+            <div class="field">
+                <label for="subject">Тема <span class="req">*</span></label>
+                <select id="subject" name="subject">
+                    <option value="">— Выберите тему —</option>
+                    <option value="order">Заказ</option>
+                    <option value="support">Поддержка</option>
+                    <option value="other">Другое</option>
+                </select>
+                <div class="error" id="subject-error"></div>
+            </div>
+
+            <div class="field">
+                <label for="message">Сообщение <span class="req">*</span></label>
+                <textarea id="message" name="message" placeholder="Ваше сообщение..."></textarea>
+                <div class="error" id="message-error"></div>
+            </div>
+
+            <div class="field checkbox-row">
+                <input type="checkbox" id="agree" name="agree">
+                <label for="agree" style="margin:0; font-weight:normal;">Я согласен с обработкой персональных данных <span class="req">*</span></label>
+            </div>
+            <div class="error" id="agree-error"></div>
+
+            <button type="submit" id="submit-btn" name="submit">Отправить</button>
+        </form>
+
+        <div id="success-message" class="success hidden">
+            Спасибо! Ваше сообщение успешно отправлено.
+        </div>
+    </div>
+
+    <script>
+    const form = document.getElementById("contact-form");
+    const successMessage = document.getElementById("success-message");
+
+    const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    function setError(field, message) {
+      document.getElementById(field + "-error").textContent = message;
+      return !message;
+    }
+
+    function validate() {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const subject = document.getElementById("subject").value;
+      const message = document.getElementById("message").value.trim();
+      const agree = document.getElementById("agree").checked;
+
+      let ok = true;
+
+      ok = setError("name", name === "" ? "Введите имя" : (name.length < 2 ? "Имя должно содержать минимум 2 символа" : "")) && ok;
+      ok = setError("email", email === "" ? "Введите email" : (!EMAIL_RE.test(email) ? "Некорректный email" : "")) && ok;
+      ok = setError("subject", subject === "" ? "Выберите тему" : "") && ok;
+      ok = setError("message", message === "" ? "Введите сообщение" : (message.length < 10 ? "Сообщение должно содержать минимум 10 символов" : "")) && ok;
+      ok = setError("agree", agree ? "" : "Необходимо согласие с обработкой данных") && ok;
+
+      return ok;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (validate()) {
+        form.classList.add("hidden");
+        successMessage.classList.remove("hidden");
+      }
+    });
+    </script>
+</body>
+</html>
