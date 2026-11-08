@@ -19,7 +19,9 @@ def driver():
     """Фикстура: создает браузер до теста и закрывает после."""
     options = webdriver.ChromeOptions()
     options.add_argument("--window-size=1280,800")
-    # options.add_argument("--headless=new")  # для CI
+    options.add_argument("--headless=new")          # Включаем невидимый режим для GitHub
+    options.add_argument("--no-sandbox")            # Обязательно для серверов Linux
+    options.add_argument("--disable-dev-shm-usage") # Обязательно для серверов Linux
     service = Service(ChromeDriverManager().install())
     drv = webdriver.Chrome(service=service, options=options)
     yield drv
